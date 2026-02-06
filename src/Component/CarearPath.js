@@ -2,7 +2,7 @@ import CarearPathCard from "../Elements/Career.card"
 import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from "gsap/ScrollTrigger";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function CarearPath() {
@@ -12,10 +12,6 @@ export default function CarearPath() {
     const containar2 = useRef({})
     const CarearCards = useRef({})
 
-    useEffect(() => {
-        console.log(CarearCards)
-        CarearCards.current.scroll(0, 2000)
-    }, [])
 
     useGSAP(() => {
 
@@ -99,7 +95,7 @@ export default function CarearPath() {
 
     return (
         <>
-            <div ref={containar2} className="w-dvw h-dvh md:w-[80%] mx-auto py-32">
+            <div id="experience" ref={containar2} className="w-dvw h-dvh md:w-[80%] mx-auto py-32">
 
                 <div className="flex items-center gap-5 px-6" >
                     <h3 className="text-3xl font-bold inline-block shrink-0">Career path</h3>

@@ -52,7 +52,7 @@ export default function Expertise() {
 
     return (
         <>
-            <div id="containar" ref={containar} className="h-dvh pt-20">
+            <div id="experties" ref={containar} className="h-dvh pt-20">
 
                 {/* TITLE INFORMATION  */}
                 <div id="ttt" className="flex flex-col gap-2 items-center mt-10">

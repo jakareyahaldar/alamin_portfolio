@@ -2,6 +2,7 @@ import { Link } from "react-router-dom"
 
 
 export default function Footer() {
+
     return (
         <>
             <footer className="bg-slate-950 border-t border-white/5 py-12 relative z-10">

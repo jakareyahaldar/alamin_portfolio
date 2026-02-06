@@ -1,8 +1,31 @@
 import TraningCertificationsCard from "../Elements/Training_Certifications_card"
-
+import { useGSAP } from "@gsap/react"
+import gsap from "gsap"
+import { useRef } from "react"
 
 
 export default function Traning_Certifications() {
+
+    const certificateContainer = useRef({})
+    const Certificates = useRef({})
+
+    useGSAP(()=>{
+
+        gsap.from(Certificates.current,{
+            scrollTrigger : {
+                trigger : certificateContainer.current,
+                start: "top top",
+                end: "+=1500",
+                pin: true,
+                scrub: 3
+            },
+            y: 1000,
+            
+        })
+
+    },{ scope: certificateContainer })
+
+
 
     const Training_Certifications_config = [
         {
@@ -75,21 +98,21 @@ export default function Traning_Certifications() {
 
     return (
         <>
-            <div className=" px-10 md:px-20 ">
+            <div id="training" ref={certificateContainer} className=" px-10 md:px-20 pt-20 max-h-dvh h-dvh">
 
-                <div className="flex flex-col md:flex-row justify-between items-start">
+                <div className="flex flex-col md:flex-row justify-between items-start z-50">
                     <div>
                         <h3 className="text-3xl font-bold">Training & Certifications</h3>
                         <div className="h-2 w-28 mt-3 bg-blue-600 rounded-xl"></div>
                     </div>
                     <div className="px-10 mt-10">
-                        <p className="w-full break-words text-sm uppercase">Lifelong Learning</p>
+                        <p className="w-full break-words text-sm uppercase text-slate-300">Lifelong Learning</p>
                     </div>
                 </div>
 
 
 
-                <div className="grid md:grid-cols-4 gap-3 my-10 justify-center items-center">
+                <div ref={Certificates} className="grid md:grid-cols-3 gap-10 my-10 justify-center items-center rotate-style">
                     {
                     Training_Certifications_config.map((data)=>{
                         return <TraningCertificationsCard
