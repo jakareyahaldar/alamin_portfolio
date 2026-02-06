@@ -88,7 +88,7 @@ export default function WorkDemonstration() {
 
     return (
         <>
-            <div id="work" ref={container3} className="px-20 max-h-dvh h-dvh pt-24 w-dvw">
+            <div id="work" ref={container3} className="md:px-20 px-10 max-h-dvh h-dvh pt-24 w-dvw">
 
                 <div className="flex flex-col md:flex-row justify-between  items-start">
                     <div>
@@ -105,7 +105,7 @@ export default function WorkDemonstration() {
 
 
                 
-                <div className="grid md:grid-cols-2 md:gap-10 gap-48 mt-11 md:mt-0 ">
+                <div className="grid md:grid-cols-2 md:gap-10 gap-60 md:mt-11 mt-5 md:mt-0 ">
                     <div ref={cards1} className="relative">
 
                         {WorkDemonstrationConfig[0].map(({ img, event, org }) => <WorkDemonstrationCard img={img} event={event} org={org} />)}

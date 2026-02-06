@@ -98,7 +98,7 @@ export default function Traning_Certifications() {
 
     return (
         <>
-            <div id="training" ref={certificateContainer} className=" px-10 md:px-20 pt-20 max-h-dvh h-dvh">
+            <div id="training" ref={certificateContainer} className=" px-5 md:px-20 pt-20 max-h-dvh h-dvh">
 
                 <div className="flex flex-col md:flex-row justify-between items-start z-50">
                     <div>
@@ -112,7 +112,7 @@ export default function Traning_Certifications() {
 
 
 
-                <div ref={Certificates} className="grid md:grid-cols-3 gap-10 my-10 justify-center items-center rotate-style">
+                <div ref={Certificates} className="grid md:grid-cols-3 gap-10 md:my-10 justify-center items-center rotate-style">
                     {
                     Training_Certifications_config.map((data)=>{
                         return <TraningCertificationsCard

@@ -71,6 +71,16 @@
     transform: perspective(800px) scale(200%);
 }
 
+@media (max-width: 450px) {
+    .rotate-style {
+        transform: perspective(800px) rotateX(10deg) rotateY(5deg) translateY(-90%);
+    }
+
+    .rotate-style-inner-card:hover {
+        transform: perspective(800px) scale(150%);
+    }
+}
+
 
 .bungee-regular {
     font-family: "Bungee", sans-serif;

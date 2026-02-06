@@ -45,7 +45,7 @@ export default function Hero(){
                     <h2 data-splitting className="bungee-regular md:text-[18dvh] text-3xl font-bold absolute z-10 top-[40%]">Alamin Howlader</h2>
                     <img className="z-20 md:w-[350px] w-full" src={me} alt=".." />
                     
-                    <div class="inline-flex absolute bottom-2 left-4 items-center space-x-2.5 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-8 hover:bg-blue-500/20 transition-colors cursor-default">
+                    <div class="inline-flex z-50 absolute bottom-2 left-4 items-center space-x-2.5 px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-8 hover:bg-blue-500/20 transition-colors cursor-default">
                     <span class="relative flex h-2.5 w-2.5">
                         <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
                         <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-blue-500"></span>
