@@ -19,10 +19,16 @@ export default function CarearPathCard({ role, date, organization, points }) {
 
                     {
                         points.map((point) => {
+
+                            const strongTxt = point.slice(0, point.indexOf(":") + 1)
+                            const normal = point.slice(point.indexOf(":") + 1)
+
+                            console.log(strongTxt, normal)
+
                             return (
                                 <li className="flex items-start text-slate-400 group-hover:text-slate-300 transition-colors">
                                     <i className="fas fa-check-circle text-blue-500 mt-1.5 mr-3 text-sm flex-shrink-0"></i>
-                                    {point}
+                                    <span><strong>{strongTxt}</strong>{"  " + normal}</span>
                                 </li>
                             )
                         })

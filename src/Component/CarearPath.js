@@ -45,9 +45,9 @@ export default function CarearPath() {
             date: "FEBRUARY 2022 — OCTOBER 2025",
             organization: "1000FIX SERVICE LTD",
             points: [
-                <span><strong>Operations Leadership:</strong> Orchestrated complete service operation lifecycles across regional hubs, ensuring 99% SLA compliance.</span>,
-                <span><strong>Performance Optimization: </strong> Optimized inventory turnover and dealer relationship performance metrics, resulting in a15% reduction in operational costs.</span>,
-                <span><strong>Strategic Management:</strong> Direct oversight of managerial activities, including dealer management, inventory logistics, and the integration of sales with after-sales service.</span>
+                "Operations Leadership: Orchestrated complete service operation lifecycles across regional hubs, ensuring 99% SLA compliance.",
+                "Performance Optimization: </strong> Optimized inventory turnover and dealer relationship performance metrics, resulting in a15% reduction in operational costs.",
+                "Strategic Management:  Direct oversight of managerial activities, including dealer management, inventory logistics, and the integration of sales with after-sales service."
             ]
         },
         {
@@ -55,9 +55,9 @@ export default function CarearPath() {
             date: "JUNUARY 2021 — JANUARY 2022",
             organization: "Softalogy Limited",
             points: [
-                <span><strong>Market Penetration:</strong>Led strategic market penetration initiatives for software solutions specifically targeting the SME sector.</span>,
-                <span><strong>Relationship Management:</strong> Managed high-level customer relations and established robust communication channels with retailers to drive brand loyalty.</span>,
-                <span><strong>Team Leadership:</strong> Supervised and mentored a sales team to achieve regional targets and improve overall market presence.</span>
+                "Market Penetration: Led strategic market penetration initiatives for software solutions specifically targeting the SME sector.",
+                "Relationship Management:  Managed high-level customer relations and established robust communication channels with retailers to drive brand loyalty.",
+                "Team Leadership:  Supervised and mentored a sales team to achieve regional targets and improve overall market presence."
             ]
         },
         {
@@ -65,9 +65,9 @@ export default function CarearPath() {
             date: "JANUARY 2016 — NOVEMBER 2017",
             organization: "Dutch-Bangla Bank PLC",
             points: [
-                <span><strong>usiness Development:</strong> pearheaded customer acquisition for Rocket mobile banking services within rural divisions to increase financial inclusion.</span>,
-                <span><strong>Stakeholder Engagement:</strong> Managed diverse stakeholder relationships and internal office operations to ensure seamless service delivery.</span>,
-                <span><strong>Client Relations:</strong> Provided dedicated customer relations management, serving as a primary point of contact for banking recommendations and troubleshooting.</span>
+                "usiness Development:  pearheaded customer acquisition for Rocket mobile banking services within rural divisions to increase financial inclusion.",
+                "Stakeholder Engagement:  Managed diverse stakeholder relationships and internal office operations to ensure seamless service delivery.",
+                "Client Relations:  Provided dedicated customer relations management, serving as a primary point of contact for banking recommendations and troubleshooting."
             ]
         },
         {
@@ -75,10 +75,10 @@ export default function CarearPath() {
             date: "JANUARY 2014 — DECEMBER 2015",
             organization: "Innovative Research & Consultancy Ltd.",
             points: [
-                <span><strong>Data Collection & Auditing:</strong> Conducted comprehensive field inspections and site audits to ensure data accuracy and compliance with project specifications.</span>,
-                <span><strong>Research Analysis:</strong> Systematically gathered and verified information from diverse rural demographics to support large-scale consultancy projects.</span>,
-                <span><strong>Operational Reporting:</strong> Documented field findings and provided detailed reports to stakeholders, ensuring all research activities met strict quality assurance standards.</span>,
-                <span><strong>Project Coordination:</strong> Managed local logistics and community outreach to facilitate seamless data gathering in various divisions.</span>
+                "Data Collection & Auditing:  Conducted comprehensive field inspections and site audits to ensure data accuracy and compliance with project specifications.",
+                "Research Analysis:  Systematically gathered and verified information from diverse rural demographics to support large-scale consultancy projects.",
+                "Operational Reporting:  Documented field findings and provided detailed reports to stakeholders, ensuring all research activities met strict quality assurance standards.",
+                "Project Coordination:  Managed local logistics and community outreach to facilitate seamless data gathering in various divisions."
             ]
         },
         // {
@@ -86,9 +86,9 @@ export default function CarearPath() {
         //     date: "",
         //     organization: "",
         //     points: [
-        //         <span></span>,
-        //         <span></span>,
-        //         <span></span>
+        //        ..",
+        //        ..",
+        //        .."
         //     ]
         // },
     ]
