@@ -1,72 +1,71 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { GetAllData } from "../feature/globalState/state";
+import { useDispatch, useSelector } from "react-redux";
 
-// Dummy initial data for testing
-const initialData = [
-  {
-    img: "https://lh3.googleusercontent.com/d/1dYf7Y5DoxLPcxbZXwbJYb6Y2mLGo3OCr",
-    event: "Summit",
-    org: "ICT Division",
-  },
-];
+const api = process.env.REACT_APP_API_URL + "/work"
 
 const WorkDemoManager = () => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch()
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({ img: "", event: "", org: "" });
-  const [editIndex, setEditIndex] = useState(null);
+  const [editId, setEditId] = useState(null)
 
-  // Fetch data from server (simulate fetch)
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        setError("");
-        // Replace with your actual API
-        // const response = await fetch("YOUR_API_URL");
-        // if (!response.ok) throw new Error("Failed to fetch");
-        // const result = await response.json();
-        const result = initialData; // using dummy data for now
-        setData(result);
-      } catch (err) {
-        setError(err.message || "Something went wrong!");
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchData();
-  }, []);
+  const globalState = useSelector(state => state.state)
+
+  const data = globalState?.data?.WorkDemon || []
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.img || !form.event || !form.org) return;
-
-    if (editIndex !== null) {
-      const updatedData = [...data];
-      updatedData[editIndex] = form;
-      setData(updatedData);
-      setEditIndex(null);
-    } else {
-      setData([...data, form]);
+    setLoading(true)
+    setError("")
+    const payload = {
+      method: editId ? "PUT" : "POST",
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify(form)
     }
 
+    let req = await fetch(editId ? api + `/${editId}` : api, payload)
+    setLoading(false)
+    const isok = req.ok
+    req = await req.json()
+    if (!isok) {
+      setError(req.error)
+      return
+    }
+
+    dispatch(GetAllData())
+    setEditId(null)
     setForm({ img: "", event: "", org: "" });
   };
 
-  const handleDelete = (index) => {
+  const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this item?")) {
-      const updatedData = data.filter((_, i) => i !== index);
-      setData(updatedData);
+      setError("")
+      try {
+        let res = await fetch(api + `/${id}`, { method: "delete" })
+        if (!res.ok) throw Error("Delete Faild.")
+        if (res.ok) {
+          dispatch(GetAllData())
+        }
+      } catch (err) { setError(err.message) }
     }
   };
 
-  const handleEdit = (index) => {
-    setForm(data[index]);
-    setEditIndex(index);
+  const handleEdit = (item) => {
+    const d = {}
+    for (const key of Object.keys(form)) {
+      d[key] = item[key]
+    }
+    setForm(d);
+    setEditId(item._id);
   };
 
   return (
@@ -108,7 +107,7 @@ const WorkDemoManager = () => {
           type="submit"
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition"
         >
-          {editIndex !== null ? "Update" : "Add"}
+          {editId !== null ? "Update" : "Add"}
         </button>
       </form>
 
@@ -138,13 +137,13 @@ const WorkDemoManager = () => {
               <p className="text-gray-500 mb-2">{item.org}</p>
               <div className="flex gap-2">
                 <button
-                  onClick={() => handleEdit(index)}
+                  onClick={() => handleEdit(item)}
                   className="bg-yellow-400 text-white px-3 py-1 rounded-md hover:bg-yellow-500 transition"
                 >
                   Edit
                 </button>
                 <button
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(item._id)}
                   className="bg-red-500 text-white px-3 py-1 rounded-md hover:bg-red-600 transition"
                 >
                   Delete

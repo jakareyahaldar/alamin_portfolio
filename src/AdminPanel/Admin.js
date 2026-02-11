@@ -1,11 +1,55 @@
 import { Link } from "react-router-dom";
-import me from "../assets/me2.png";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+
+const API = process.env.REACT_APP_API_URL
 
 export default function Admin() {
-    const api = process.env.REACT_APP_API_URL;
-    const [prevImage, setPrevImage] = useState(me);
+    const [prevImage, setPrevImage] = useState("");
     const [image_url, setImageUrl] = useState("");
+    const [newPassword, setNewPassword] = useState("");
+
+
+
+    const globalState = useSelector( state => state.state )
+    useEffect(()=>{
+        setPrevImage(globalState?.data?.user?.image)
+    },[globalState?.data?.user?.image])
+
+
+    async function handleNewPass() {
+
+        if (!newPassword) {
+            alert("Password is required");
+            return;
+        }
+
+        try {
+            const res = await fetch(`${API}/password`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ password: newPassword }),
+            });
+
+            const data = await res.json();
+
+            if (res.ok) {
+                window.localStorage.setItem("__ah", JSON.stringify(data.token))
+                alert("Password Chenged.")
+            } else {
+                alert(data?.error || "Login failed")
+            }
+        } catch (error) {
+            alert("Server error. Please try again.");
+        }
+    }
+
+
+
+
+
 
     // IMAGE FUNCTIONALITY
     async function SaveImage() {
@@ -18,12 +62,14 @@ export default function Admin() {
                 headers: { "content-type": "application/json" },
             };
 
-            const request = await fetch(api + "/image", option);
+            const request = await fetch(API + "/image", option);
             if (request.ok) {
                 const res = await request.json();
                 setPrevImage(res.url);
+                setImageUrl("")
             } else {
-                throw Error("Can't save!");
+                const res = await request.json();
+                throw Error(res.error);
             }
         } catch (err) {
             alert(err.message);
@@ -44,20 +90,37 @@ export default function Admin() {
                     src={prevImage}
                     alt="Profile"
                 />
-                <div className="flex flex-col md:flex-row gap-4 items-center">
-                    <input
-                        value={image_url}
-                        onChange={(e) => setImageUrl(e.target.value)}
-                        className="px-4 py-2 text-black border border-gray-300 rounded-lg w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                        type="url"
-                        placeholder="Enter Image URL..."
-                    />
-                    <button
-                        onClick={SaveImage}
-                        className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition"
-                    >
-                        Save
-                    </button>
+                <div className="grid gap-3">
+                    <div className="flex flex-col md:flex-row gap-4 items-center">
+                        <input
+                            value={newPassword}
+                            onChange={(e) => setNewPassword(e.target.value)}
+                            className="px-4 py-2 text-black border border-gray-300 rounded-lg w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="password"
+                            placeholder="Write New password for change.."
+                        />
+                        <button
+                            onClick={handleNewPass}
+                            className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition"
+                        >
+                            Change
+                        </button>
+                    </div>
+                    <div className="flex flex-col md:flex-row gap-4 items-center">
+                        <input
+                            value={image_url}
+                            onChange={(e) => setImageUrl(e.target.value)}
+                            className="px-4 py-2 text-black border border-gray-300 rounded-lg w-72 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            type="url"
+                            placeholder="Enter Image URL..."
+                        />
+                        <button
+                            onClick={SaveImage}
+                            className="px-6 py-2 bg-blue-500 text-white font-semibold rounded-lg shadow hover:bg-blue-600 transition"
+                        >
+                            Save
+                        </button>
+                    </div>
                 </div>
             </div>
 

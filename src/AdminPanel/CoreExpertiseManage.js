@@ -1,4 +1,6 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAllData } from "../feature/globalState/state";
 
 const API_URL = process.env.REACT_APP_API_URL + "/expertise";
 
@@ -10,42 +12,25 @@ const emptyForm = {
 };
 
 export default function CoreExpertise() {
-  const [data, setData] = useState([]);
+
+  const dispatch = useDispatch()
+
   const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
 
-  /* ================= FETCH DATA ================= */
-  const fetchData = async () => {
-    try {
-      setLoading(true);
-      setError("");
+  const globalState = useSelector(state => state.state)
+  
+  const data = globalState?.data?.Experties || []
 
-      const res = await fetch(API_URL);
 
-      if (!res.ok) {
-        throw new Error("Failed to load data");
-      }
-
-      const json = await res.json();
-      setData(Array.isArray(json) ? json : []);
-    } catch (err) {
-      setError(err.message || "Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, []);
 
   /* ================= HANDLE SUBMIT ================= */
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
     setError("");
     setMessage("");
 
@@ -65,13 +50,15 @@ export default function CoreExpertise() {
       );
 
       if (!res.ok) {
-        throw new Error("Failed to save data");
+        const dd = await res.json()
+        throw new Error(dd.error);
       }
 
       setMessage(editId ? "Updated successfully" : "Added successfully");
       setForm(emptyForm);
       setEditId(null);
-      fetchData();
+      dispatch(GetAllData())
+      setLoading(false)
     } catch (err) {
       setError(err.message);
     }
@@ -89,8 +76,8 @@ export default function CoreExpertise() {
       if (!res.ok) {
         throw new Error("Delete failed");
       }
-
-      fetchData();
+      dispatch(GetAllData())
+      
     } catch (err) {
       setError(err.message);
     }
@@ -98,7 +85,7 @@ export default function CoreExpertise() {
 
   /* ================= EDIT ================= */
   const handleEdit = (item) => {
-    setEditId(item.id);
+    setEditId(item._id);
     setForm(item);
   };
 
@@ -174,12 +161,13 @@ export default function CoreExpertise() {
             className="bg-white p-6 rounded-xl shadow hover:shadow-lg transition"
           >
             <div
-              className={`w-14 h-14 flex items-center justify-center rounded-xl text-white ${item.iconBg}`}
+              className={`w-14 h-14 flex items-center justify-center rounded-xl text-white`}
             >
-              <i className={`${item.icon} text-xl`} />
+              <i className={`${item.icon} text-gray-600 text-xl`} />
+              <i className={`${item.iconBg} text-gray-600 text-xl`} />
             </div>
 
-            <h3 className="text-xl font-semibold mt-4">
+            <h3 className="text-xl text-gray-600 font-semibold mt-4">
               {item.title}
             </h3>
 
@@ -196,7 +184,7 @@ export default function CoreExpertise() {
               </button>
 
               <button
-                onClick={() => handleDelete(item.id)}
+                onClick={() => handleDelete(item._id)}
                 className="px-4 py-2 text-sm rounded bg-red-500 text-white hover:bg-red-600"
               >
                 Delete

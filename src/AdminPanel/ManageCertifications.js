@@ -1,8 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
+import { GetAllData } from "../feature/globalState/state";
+import { useDispatch, useSelector } from "react-redux";
+
+const api = process.env.REACT_APP_API_URL + "/certificate"
 
 const ManageCertifications = () => {
-  const [certifications, setCertifications] = useState([]);
-  const [loading, setLoading] = useState(true);
+
+  const dispatch = useDispatch()
+
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
   const [form, setForm] = useState({
     title: "",
@@ -10,26 +16,14 @@ const ManageCertifications = () => {
     icon_class: "",
     src: "",
   });
-  const [editingIndex, setEditingIndex] = useState(null);
+  const [editId, setEditId] = useState(null)
 
-  // Fetch data from server
-  const fetchCertifications = async () => {
-    try {
-      setLoading(true);
-      setError("");
-      const res = await fetch("/api/certifications"); // replace with your API endpoint
-      setCertifications(res.data || []);
-    } catch (err) {
-      setError("Failed to fetch certifications. Try again later.");
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
 
-  useEffect(() => {
-    fetchCertifications();
-  }, []);
+
+
+  const globalState = useSelector(state => state.state)
+
+  const certifications = globalState?.data?.Certificate || []
 
   // Handle form input
   const handleChange = (e) => {
@@ -39,42 +33,61 @@ const ManageCertifications = () => {
   // Add or update certification
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true)
+    setError("")
     try {
       if (!form.title || !form.organization) {
         alert("Title and Organization are required!");
         return;
       }
 
-      if (editingIndex !== null) {
-        // Update
-        const updatedCert = [...certifications];
-        updatedCert[editingIndex] = { ...form };
-        setCertifications(updatedCert);
-        setEditingIndex(null);
-      } else {
-        // Add
-        setCertifications([...certifications, { ...form }]);
+      const payload = {
+        method: editId ? "PUT" : "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(form)
       }
 
-      setForm({ title: "", organization: "", icon_class: "", src: "" });
+      const req = await fetch(editId ? api + `/${editId}` : api, payload)
+      setLoading(false)
+      if (!req.ok) {
+        const res = await req.json()
+        setError(res.error || "Cant Save!")
+      }
+      if (req.ok) {
+        dispatch(GetAllData())
+        setForm({
+          title: "",
+          organization: "",
+          icon_class: "",
+          src: ""
+        })
+      }
+
     } catch (err) {
-      console.error(err);
-      alert("Something went wrong!");
+      alert(err.message)
     }
   };
 
   // Delete certification
-  const handleDelete = (index) => {
-    if (window.confirm("Are you sure you want to delete this certification?")) {
-      const updatedCert = certifications.filter((_, i) => i !== index);
-      setCertifications(updatedCert);
-    }
+  const handleDelete = async (id) => {
+    setError("")
+    try{
+      let res = await fetch(api+`/${id}`,{method:"delete"})
+      if(!res.ok) throw Error("Delete Faild.")
+      if(res.ok){
+        dispatch(GetAllData())
+      }
+    }catch(err){setError(err.message)}
   };
 
   // Edit certification
-  const handleEdit = (index) => {
-    setForm(certifications[index]);
-    setEditingIndex(index);
+  const handleEdit = (cert) => {
+    const tdata = {}
+    for (const key of Object.keys(form)) {
+      tdata[key] = cert[key]
+    }
+    setForm(tdata);
+    setEditId(cert._id);
   };
 
   return (
@@ -92,7 +105,7 @@ const ManageCertifications = () => {
           placeholder="Certification Title"
           value={form.title}
           onChange={handleChange}
-          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border text-slate-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <input
           type="text"
@@ -100,7 +113,7 @@ const ManageCertifications = () => {
           placeholder="Organization"
           value={form.organization}
           onChange={handleChange}
-          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border text-slate-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <input
           type="text"
@@ -108,7 +121,7 @@ const ManageCertifications = () => {
           placeholder="Font Awesome Icon Class"
           value={form.icon_class}
           onChange={handleChange}
-          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border text-slate-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <input
           type="text"
@@ -116,13 +129,13 @@ const ManageCertifications = () => {
           placeholder="Certification File URL"
           value={form.src}
           onChange={handleChange}
-          className="border p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
+          className="border text-slate-700 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-400"
         />
         <button
           type="submit"
           className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
         >
-          {editingIndex !== null ? "Update Certification" : "Add Certification"}
+          {editId !== null ? "Update Certification" : "Add Certification"}
         </button>
       </form>
 
@@ -147,7 +160,7 @@ const ManageCertifications = () => {
             <div className="flex items-center gap-4 mb-4">
               <i className={`${cert.icon_class} text-3xl text-blue-500`}></i>
               <div>
-                <h2 className="font-bold text-lg">{cert.title}</h2>
+                <h2 className="text-gray-600 font-bold text-lg">{cert.title}</h2>
                 <p className="text-gray-600">{cert.organization}</p>
               </div>
             </div>
@@ -161,13 +174,13 @@ const ManageCertifications = () => {
             </a>
             <div className="flex gap-2">
               <button
-                onClick={() => handleEdit(index)}
+                onClick={() => handleEdit(cert)}
                 className="flex-1 bg-yellow-400 text-white py-1 rounded hover:bg-yellow-500 transition"
               >
                 Edit
               </button>
               <button
-                onClick={() => handleDelete(index)}
+                onClick={() => handleDelete(cert._id)}
                 className="flex-1 bg-red-500 text-white py-1 rounded hover:bg-red-600 transition"
               >
                 Delete

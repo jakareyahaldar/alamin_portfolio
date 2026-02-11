@@ -1,4 +1,4 @@
-export default function Card1({ text, icon, bg_icon, title }) {
+export default function Card1({ unique, text, icon, bg_icon, title }) {
 
 
 
@@ -6,7 +6,7 @@ export default function Card1({ text, icon, bg_icon, title }) {
 
     return (
         <>
-            <div className=" w-full shrink-0">
+            <div key={unique} className=" w-full shrink-0">
                 <div className="md:w-2/3 mx-auto p-8 rounded-3xl group relative overflow-hidden bg-slate-800">
                     <div className="absolute top-0 right-0 p-8 opacity-10 group-hover:opacity-20 transition-opacity">
                         <i className={`${icon} text-9xl text-blue-500 transform rotate-12 group-hover:scale-110 transition-transform duration-500`}></i>

@@ -62,9 +62,9 @@ export default function Navbar() {
                 {
                     !Mobile && <div className="flex gap-16 items-center">
                     <nav className="flex gap-5 uppercase">
-                        {NavigationConfig.map(e => <a className="nav_links relative" href={e.path}>{e.name}</a>)}
+                        {NavigationConfig.map(e => <a key={window.crypto.randomUUID()} className="nav_links relative text-slate-400 hover:text-white" href={e.path}>{e.name}</a>)}
                     </nav>
-                    <a className="px-3 py-1 transition-all hover:bg-blue-600 rounded-lg" href="/">Let's Talk</a>
+                    <a className="px-3 py-1 transition-all hover:bg-blue-600 rounded-lg bg-slate-800" href="/">Let's Talk</a>
                 </div>
                 }
 

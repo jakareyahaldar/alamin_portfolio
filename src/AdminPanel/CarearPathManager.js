@@ -1,34 +1,31 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { GetAllData } from "../feature/globalState/state";
 
 const API_URL = process.env.REACT_APP_API_URL + "/carear"
 export default function CareerPathManager() {
-    const [careers, setCareers] = useState([]);
+
+    const dispatch = useDispatch()
+
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState("");
 
+
+    const { isLodding, data } = useSelector(state => state.state)
+    if(isLodding !== loading){
+        if(isLodding) setLoading(true)
+        if(!isLodding) setLoading(false)
+    }
+    const careers = data?.carearPath || []
+
     const [form, setForm] = useState({
-        id: null,
+        _id: null,
         role: "",
         date: "",
         organization: "",
         points: "",
     });
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const res = await fetch(API_URL);
-                if (!res.ok) throw new Error();
-                const data = await res.json();
-                setCareers(data || []);
-            } catch {
-                setError("No career data found or server error occurred.");
-            } finally {
-                setLoading(false);
-            }
-        };
-        fetchData();
-    }, []);
 
     const handleChange = (e) => {
         setForm({ ...form, [e.target.name]: e.target.value });
@@ -45,28 +42,28 @@ export default function CareerPathManager() {
             points: form.points.split("\n"),
         };
 
+        
         try {
-            if (form.id) {
-                setCareers((prev) =>
-                    prev.map((item) => (item.id === form.id ? { ...item, ...payload } : item))
-                );
-
-                const res = await fetch(`${API_URL}/${form.id}`, {
+            if (form._id) {
+                const res = await fetch(`${API_URL}/${form._id}`, {
                     method: "PUT",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),
                 });
                 if (!res.ok) throw new Error("Update failed");
+                if (res.ok){
+                    dispatch(GetAllData())
+                }
             } else {
-                const newItem = { id: Date.now(), ...payload };
-                setCareers((prev) => [...prev, newItem]);
-
                 const res = await fetch(API_URL, {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
                     body: JSON.stringify(payload),
                 });
                 if (!res.ok) throw new Error("Create failed");
+                if (res.ok){
+                    dispatch(GetAllData())
+                }
             }
 
             setForm({ id: null, role: "", date: "", organization: "", points: "" });
@@ -77,7 +74,7 @@ export default function CareerPathManager() {
 
     const handleEdit = (item) => {
         setForm({
-            id: item.id,
+            _id: item._id,
             role: item.role,
             date: item.date,
             organization: item.organization,
@@ -86,9 +83,11 @@ export default function CareerPathManager() {
     };
 
     const handleDelete = async (id) => {
-        setCareers((prev) => prev.filter((item) => item.id !== id));
+        
         try {
-            await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+            const res = await fetch(`${API_URL}/${id}`, { method: "DELETE" });
+            if(!res.ok) throw Error("Cant Delete!")
+            if(res.ok) dispatch(GetAllData())
         } catch {
             setError("Failed to delete item from server.");
         }
@@ -134,7 +133,7 @@ export default function CareerPathManager() {
                 />
 
                 <button className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition duration-300">
-                    {form.id ? "Update" : "Add"} Career
+                    {form._id ? "Update" : "Add"} Career
                 </button>
 
                 {error && <p className="text-red-600 font-medium mt-2">{error}</p>}
@@ -156,11 +155,11 @@ export default function CareerPathManager() {
                             </div>
                             <div className="flex gap-2">
                                 <button onClick={() => handleEdit(item)} className="px-4 py-2 border rounded-lg hover:bg-gray-100 transition text-gray-800">Edit</button>
-                                <button onClick={() => handleDelete(item.id)} className="px-4 py-2 border rounded-lg text-red-600 hover:bg-red-50 transition">Delete</button>
+                                <button onClick={() => handleDelete(item._id)} className="px-4 py-2 border rounded-lg text-red-600 hover:bg-red-50 transition">Delete</button>
                             </div>
                         </div>
                         <ul className="list-disc pl-5 mt-4 text-gray-800 space-y-1">
-                            {item.points.map((p, i) => <li key={i}>{p}</li>)}
+                            {item.points.map((p, i) => <li className="text-gray-800" key={i}>{p}</li>)}
                         </ul>
                     </div>
                 ))}

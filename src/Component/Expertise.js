@@ -3,6 +3,7 @@ import gsap from 'gsap';
 import { useGSAP } from '@gsap/react';
 import ScrollTrigger from "gsap/ScrollTrigger";
 import { useRef } from "react";
+import { useSelector } from "react-redux";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function Expertise() {
@@ -10,42 +11,26 @@ export default function Expertise() {
     const containar = useRef(null)
     const cards = useRef(null)
 
+
+    const globalState = useSelector(state => state.state)
+    const InformationConfig = globalState?.data?.Experties || []
+
     useGSAP(() => {
+        if (InformationConfig.length) {
+            gsap.from(cards.current, {
+                scrollTrigger: {
+                    trigger: containar.current,
+                    start: "top top",
+                    end: `=+${cards.current.scrollWidth}`,
+                    pin: true,
+                    scrub: 1
+                },
+                x: -cards.current.scrollWidth
+            })
 
-        gsap.from(cards.current, {
-            scrollTrigger: {
-                trigger: containar.current,
-                start: "top top",
-                end: `=+${cards.current.scrollWidth}`,
-                pin: true,
-                scrub: 1
-            },
-            x: -cards.current.scrollWidth
-        })
+        }
+    },[InformationConfig], { scope: containar })
 
-    }, { scope: containar })
-
-
-    const InformationConfig = [
-        {
-            title: "Sales Strategy",
-            text: "Driving high-impact commercial outcomes through a methodological approach to market segmentation and predictive modeling. My focus is on turning raw data into actionable retail strategies.",
-            icon: "fas fa-chart-pie",
-            bg_icon: "fas fa-chart-line"
-        },
-        {
-            title: "After-Sales Services",
-            text: "Expertise in the end-to-end technical service journey. I focus on CRM optimization and process refinement to ensure that every touchpoint reinforces the brand’s value proposition and long-term retention goals",
-            icon: "fas fa-users-gear",
-            bg_icon: "fas fa-headset"
-        },
-        {
-            title: "Operations Management",
-            text: "Proficient in the orchestration of dealer networks and the optimization of supply chain logistics. I lead multidisciplinary teams to ensure that operational infrastructure is both lean and scalable.",
-            icon: "fas fa-network-wired",
-            bg_icon: "fas fa-layer-group"
-        },
-    ]
 
 
 
@@ -63,14 +48,14 @@ export default function Expertise() {
 
                 {/* MAIN CONTENTS */}
 
-                {/* <div class="card mt-10 grid grid-cols-1 md:grid-cols-3 gap-8 p-9"> */}
                 <div ref={cards} className="flex mt-10 gap-6">
                     {
                         InformationConfig.map(e => <Card1
+                            unique={window.crypto.randomUUID()}
                             title={e.title}
-                            text={e.text}
+                            text={e.description}
                             icon={e.icon}
-                            bg_icon={e.bg_icon}
+                            bg_icon={e.iconBg}
                         />)
                     }
                 </div>
